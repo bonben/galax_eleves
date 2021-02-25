@@ -1,6 +1,6 @@
-# AFF3CT Documentation Generation
+# Galax Documentation Generation
 
-**AFF3CT** uses [Doxygen](http://www.doxygen.org) to generate automatically the documentation.
+**Galax** uses [Doxygen](http://www.doxygen.org) to generate automatically the documentation.
 
 Doxygen can easily be installed on Ubuntu/Debian systems like this:
 
