@@ -1,0 +1,6 @@
+[submodule "lib/cli"]
+	path = lib/cli
+	url = git@github.com:CLIUtils/CLI11.git
+[submodule "lib/MIPP"]
+	path = lib/MIPP
+	url = git@github.com:aff3ct/MIPP.git
