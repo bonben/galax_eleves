@@ -12,7 +12,7 @@ You can generate the hierarchy of the different classes as well as a list of the
 
 ## Means
 
-You will work in groups of 2 (except one group of three). Fill the document here : [Groups](https://cloud.imt-atlantique.fr/index.php/s/qJ7A5kAfRnmH6zx).
+You will work in groups of 2 (except one group of three). Fill the document here : [Groups](https://partage.imt.fr/index.php/s/ex7pYMTDRSDCJ6w).
 
 One machine is provided per group.
 
@@ -31,7 +31,7 @@ The objective of the course is to accelerate the simulation. You must maximize t
 
 ## Evaluation
 
-* Project logbook: you will keep an up-to-date document explaining your experiences, your results, your choices, taken from day to day. No need to detail, to put images, to spend time on formatting. You will use text format files that have been created for you [here](https://partage.imt.fr/index.php/s/Ftt9KC77B93Yck4).
+* Project logbook: you will keep an up-to-date document explaining your experiences, your results, your choices, taken from day to day. No need to detail, to put images, to spend time on formatting. You will use text format files that have been created for you [here](https://cloud.imt-atlantique.fr/index.php/s/qJ7A5kAfRnmH6zx).
 * Presentation (10 minutes + 5 minutes questions)
   * Description of the final implementation
   * Demonstration
