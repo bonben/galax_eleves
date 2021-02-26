@@ -26,6 +26,14 @@ The objective of the course is to accelerate the simulation. You must maximize t
 * Deliverables
   * Project code
 
+### Extras
+
+Any extra feature will be well appreciated and taken into account for the evaluation : 
+* Improvement of the graphical rendering
+* Inclusion of other libraries into the cmake build automation
+* Addition of algorithmic variants of the nbody problem (n² -> nlogn)
+* ...
+
 ## How to compile and run the code
 
 Galax uses `cmake` in order to automate building.
