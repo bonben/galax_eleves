@@ -14,6 +14,10 @@ You can generate the hierarchy of the different classes as well as a list of the
 
 The objective of the course is to accelerate the simulation. You must maximize the number of simulated frames per second, when the display is disabled and the number of simulated particles is 10000. You can use all the techniques that have been seen in the course, and combine them.
 
+* 2 categories:
+  * Exact reproduction of [Model_CPU_naive.cpp](src/Model/Model_CPU/Model_CPU_naive/Model_CPU_naive.cpp)
+  * Modifications of the algorithm allowed
+
 **The best group will be given access to a massively parallel machine to test its code (such as 2xIntel®Xeon™Platinum 8168 CPUs ), or a high performance GPU if necessary.**
 
 ## Evaluation
@@ -32,6 +36,7 @@ Any extra feature will be well appreciated and taken into account for the evalua
 * Improvement of the graphical rendering
 * Inclusion of other libraries into the cmake build automation
 * Addition of algorithmic variants of the nbody problem (n² -> nlogn)
+* Include Galax as a wrapper for other languages
 * ...
 
 ## How to compile and run the code
