@@ -12,7 +12,7 @@ You can generate the hierarchy of the different classes as well as a list of the
 
 ## Means
 
-You will work in groups of 2 (except one group of three). Fill the document here : [Groups](https://partage.imt.fr/index.php/s/ex7pYMTDRSDCJ6w).
+You will work in groups of 2 (except one group of three). Fill the document here : [Groups](https://cloud.imt-atlantique.fr/index.php/s/qJ7A5kAfRnmH6zx).
 
 One machine is provided per group.
 
