@@ -12,9 +12,11 @@ You can generate the hierarchy of the different classes as well as a list of the
 
 ## Means
 
-You will work in groups of 2 (except one group of three). Fill the document here : [Groups](https://partage.imt.fr/index.php/s/ex7pYMTDRSDCJ6w)
+You will work in groups of 2 (except one group of three). Fill the document here : [Groups](https://partage.imt.fr/index.php/s/ex7pYMTDRSDCJ6w).
+
 One machine is provided per group.
-Here is a link to a [tutorial to remote desktop](https://intranet.imt-atlantique.fr/mee/acces-a-distance-aux-salles-de-tp/)
+
+Here is a link to a [tutorial to remote desktop](https://intranet.imt-atlantique.fr/mee/acces-a-distance-aux-salles-de-tp/).
 
 ## Objective
 
