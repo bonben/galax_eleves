@@ -49,7 +49,7 @@ The following procedure has been tested on a fresh Ubuntu 20.04, but it can be a
 Galax needs cmake and the g++ compiler to be compiled.
 
 ```bash
-    git clone --recursive git@gitlab.imt-atlantique.fr:parping/galax.git # clone repository and update git submodules
+    git clone --recursive git@github.com:bonben/galax_eleves.git # clone repository and update git submodules
     mkdir galax/build # create a build directory
     cd galax/build # switch to it
     cmake .. -DCMAKE_BUILD_TYPE=Release # configure project with cmake
