@@ -10,9 +10,14 @@ A naive implementation can be found in [Model_CPU_naive.cpp](src/Model/Model_CPU
 
 You can generate the hierarchy of the different classes as well as a list of the different attributes and methods used in the project thanks to the doxygen tool. The instructions to perform this operation are detailed in the [doc](doc) directory.
 
-## Objective
+## Means
 
 You will work in groups of 2 (except one group of three). Fill the document here : [Groups](https://partage.imt.fr/index.php/s/ex7pYMTDRSDCJ6w)
+One machine is provided per group.
+Here is a link to a [tutorial to remote desktop](https://intranet.imt-atlantique.fr/mee/acces-a-distance-aux-salles-de-tp/)
+
+## Objective
+
 
 The objective of the course is to accelerate the simulation. You must maximize the number of simulated frames per second, when the display is disabled and the number of simulated particles is 10000. You can use all the techniques that have been seen in the course, and combine them.
 
