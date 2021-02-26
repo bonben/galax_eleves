@@ -12,6 +12,8 @@ You can generate the hierarchy of the different classes as well as a list of the
 
 ## Objective
 
+You will work in groups of 2 (except one group of three). Fill the document here : [Groups](https://partage.imt.fr/index.php/s/ex7pYMTDRSDCJ6w)
+
 The objective of the course is to accelerate the simulation. You must maximize the number of simulated frames per second, when the display is disabled and the number of simulated particles is 10000. You can use all the techniques that have been seen in the course, and combine them.
 
 * 2 categories:
