@@ -35,7 +35,7 @@ The objective of the course is to accelerate the simulation. You must maximize t
 * Presentation (10 minutes + 5 minutes questions)
   * Description of the final implementation
   * Demonstration
-  * Measured results
+  * A summary of all results measured for the different developped solutions, and their critical analysis
 * Deliverables
   * Project code
 
