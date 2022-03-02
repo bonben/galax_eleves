@@ -61,7 +61,7 @@ Galax needs cmake and the g++ compiler to be compiled.
     git clone --recursive git@github.com:bonben/galax_eleves.git # clone repository and update git submodules
     mkdir galax_eleves/build # create a build directory
     cd galax_eleves/build # switch to it
-    cmake .. -DCMAKE_BUILD_TYPE=Release # configure project with cmake
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-mavx2" # configure project with cmake, using Release build and avx2
     make #make
 ```
 
@@ -95,7 +95,7 @@ Launching galax should now open a window with the graphical display.
 ### Activating OMP
 
 For now, the performance (FPS: Frame Per Second) is low.
-It is possible to accelerate the processing by using OpenMP for multithreading and the MIPP project (https://github.com/aff3ct/MIPP) for vectorization.
+It is possible to accelerate the processing by using OpenMP for multithreading and the xsimd project (https://github.com/xtensor-stack/xsimd) for vectorization.
 ```bash
     # in the "build" directory
     cmake .. -DGALAX_LINK_OMP=ON

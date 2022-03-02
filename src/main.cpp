@@ -1,4 +1,3 @@
-#include <chrono>
 #include <string>
 #include <iostream>
 #include <vector>
@@ -9,6 +8,7 @@
 #ifdef GALAX_DISPLAY_SDL2
 #include "Display/Display_SDL2/Display_SDL2.hpp"
 #endif
+#include "Timing/Timing.hpp"
 #include "Initstate.hpp"
 #include "Model/Model_CPU/Model_CPU_naive/Model_CPU_naive.hpp"
 #include "Model/Model_CPU/Model_CPU_fast/Model_CPU_fast.hpp"
@@ -46,6 +46,9 @@ int main(int argc, char ** argv)
 	// parse arguments
 	CLI11_PARSE(app, argc, argv);
 
+	// class used to measure timing and fps
+	Timing timing;
+
 	// load particles initial position into initstate
 	Initstate initstate(n_particles);
 
@@ -78,11 +81,12 @@ int main(int argc, char ** argv)
 	else // TODO : add exception
 		exit(EXIT_FAILURE);
 
+
 	bool done = false;
 
 	while (!done)
 	{
-		auto t1 = std::chrono::high_resolution_clock::now();
+		timing.sample_before();
 
 		// display particles
 		display->update(done);
@@ -90,12 +94,7 @@ int main(int argc, char ** argv)
 		// update particles positions
 		model  ->step();
 
-		auto t2 = std::chrono::high_resolution_clock::now();
-
-		std::chrono::duration<float, std::micro> duration_us = t2 - t1;
-
-		auto fps = (float)1.0f / (duration_us.count()) * 1000000.0f;
-		std::cout << "FPS: " << std::setw(3) << fps << "\r" << std::flush;
+		timing.sample_after();
 	}
 
 	return 0;

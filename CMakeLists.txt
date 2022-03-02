@@ -34,6 +34,7 @@ set(SRC_FILES_MAIN    ${CMAKE_CURRENT_SOURCE_DIR}/src/Model/Model.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/src/Model/Model_CPU/Model_CPU_naive/Model_CPU_naive.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/src/Model/Model_CPU/Model_CPU_fast/Model_CPU_fast.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/src/Initstate.cpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/src/Timing/Timing.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 
 # add library & executable
@@ -56,14 +57,13 @@ else()
                         "$ git submodule update --init --recursive")
 endif()
 
-# MIPP
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lib/MIPP/src/mipp.h")
-    target_compile_definitions( galax     PUBLIC MIPP_ENABLE_BACKTRACE)
-    include_directories(PUBLIC "lib/MIPP/src" "MIPP")
-    message(STATUS "Galax - Header found: MIPP")
+# XSIMD
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lib/xsimd/include/xsimd/xsimd.hpp")
+    include_directories(PUBLIC "lib/xsimd/include")
+    message(STATUS "Galax - Header found: XSIMD")
 else()
-    message(FATAL_ERROR "Galax - MIPP can't be found, try to init the submodule with the following cmd:\n"
-                        "$ git submodule update --init -- ../lib/MIPP/")
+    message(FATAL_ERROR "Galax - XSIMD can't be found, try to init the submodule with the following cmd:\n"
+            "$ git submodule update --init -- ../lib/XSIMD/")
 endif()
 
 if(GALAX_LINK_CUDA)
