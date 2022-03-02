@@ -12,14 +12,11 @@ You can generate the hierarchy of the different classes as well as a list of the
 
 ## Means
 
-You will work in groups of 2 (except one group of three). Fill the document here : [Groups](https://partage.imt.fr/index.php/s/ex7pYMTDRSDCJ6w).
+You will work in groups of 2 (except one group of three). Fill the document here : [Groups](https://partage.imt.fr/index.php/s/Ak26RCXkL56Efwq).
 
-One machine is provided per group.
-
-Here is a link to a [tutorial to remote desktop](https://intranet.imt-atlantique.fr/mee/acces-a-distance-aux-salles-de-tp/).
+Please specify if you plan to implement a GPU version of galax in the corresponding column.
 
 ## Objective
-
 
 The objective of the course is to accelerate the simulation. You must maximize the number of simulated frames per second, when the display is disabled and the number of simulated particles is 10000. You can use all the techniques that have been seen in the course, and combine them.
 
@@ -27,7 +24,7 @@ The objective of the course is to accelerate the simulation. You must maximize t
   * Exact reproduction of [Model_CPU_naive.cpp](src/Model/Model_CPU/Model_CPU_naive/Model_CPU_naive.cpp)
   * Modifications of the algorithm allowed
 
-**The best group will be given access to a massively parallel machine to test its code (such as 2xIntel®Xeon™Platinum 8168 CPUs ), or a high performance GPU if necessary.**
+**The best group will be given access to a massively parallel machine to test its code (2xAMD EPYC 7643 48-Core Processor (196 threads) + 4xA100 GPUs).**
 
 ## Evaluation
 
