@@ -106,7 +106,7 @@ Provided a software platform with a working version of the CUDA toolkit, it is a
 
 ```bash
     # in the "build" directory
-    cmake .. -DGALAX_LINK_CUDA=ON
+    cmake .. -DGALAX_LINK_CUDA=ON -DCUDA_TOOLKIT_ROOT_DIR="/usr"
     make
     ./bin/galax -c GPU # use GPU version
 ```
