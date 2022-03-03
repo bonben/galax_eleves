@@ -24,7 +24,7 @@ The objective of the course is to accelerate the simulation. You must maximize t
   * Exact reproduction of [Model_CPU_naive.cpp](src/Model/Model_CPU/Model_CPU_naive/Model_CPU_naive.cpp)
   * Modifications of the algorithm allowed
 
-**The best group will be given access to a massively parallel machine to test its code (2xAMD EPYC 7643 48-Core Processor (196 threads) + 4xA100 GPUs).**
+**The best group will be given access to a massively parallel machine to test its code (2xAMD EPYC 7643 48-Core Processor (192 threads) + 4xA100 GPUs).**
 
 ## Evaluation
 
