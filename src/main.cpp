@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <iomanip>
 
 #include <CLI/CLI.hpp>
 
@@ -35,6 +36,9 @@ int main(int argc, char ** argv)
 	// number of particles used by default : 2000
 	unsigned int n_particles  = 2000;
 
+        // decide wether to check particle position against the reference or not
+        bool validatePositions = false;
+
 	// define CLI arguments
 	app.add_option("-c,--core"       , core       , "computing version")
 	    ->check(CLI::IsMember({"CPU", "GPU", "CPU_FAST"}));
@@ -42,9 +46,13 @@ int main(int argc, char ** argv)
 	    ->check(CLI::Range(0,max_n_particles));
 	app.add_option("--display"       , display_type, "disable graphical display")
 	    ->check(CLI::IsMember({"SDL2", "NO"}));
+	app.add_flag("--validate", validatePositions, "compute error in positions against the non-accelerated reference code");
 
 	// parse arguments
 	CLI11_PARSE(app, argc, argv);
+
+        // No need to validate if we are using the ref code as main simulation
+        //validatePositions = !(core == "CPU");
 
 	// class used to measure timing and fps
 	Timing timing;
@@ -54,6 +62,7 @@ int main(int argc, char ** argv)
 
 	// particles positions
 	Particles particles(n_particles);
+	Particles particlesRef(n_particles);
 
 	// init display
 	std::unique_ptr<Display> display;
@@ -66,36 +75,55 @@ int main(int argc, char ** argv)
 	else // TODO : add exception
 		exit(EXIT_FAILURE);
 
-	// init model
-	std::unique_ptr<Model> model;
+	// init models
+	std::unique_ptr<Model> model, referenceModel;
+
+        if(validatePositions)
+		referenceModel = std::make_unique<Model_CPU_naive>(initstate, particlesRef);
+
 	if (core == "CPU")
-		model = std::unique_ptr<Model>(new Model_CPU_naive(initstate, particles));
+		model = std::make_unique<Model_CPU_naive>(initstate, particles);
 #ifdef GALAX_MODEL_CPU_FAST
 	else if (core == "CPU_FAST")
-		model = std::unique_ptr<Model>(new Model_CPU_fast(initstate, particles));
+		model = std::make_unique<Model_CPU_fast>(initstate, particles);
 #endif
 #ifdef GALAX_MODEL_GPU
 	else if (core == "GPU")
-		model = std::unique_ptr<Model>(new Model_GPU(initstate, particles));
+		model = std::make_unique<MODEL_GPU>(initstate, particles);
 #endif
 	else // TODO : add exception
 		exit(EXIT_FAILURE);
 
-
 	bool done = false;
+
+	std::cout << std::setw(3);
 
 	while (!done)
 	{
-		timing.sample_before();
-
 		// display particles
 		display->update(done);
+
+		// We only want to time the computation of the model
+		// not its display
+		timing.sample_before();
 
 		// update particles positions
 		model  ->step();
 
 		timing.sample_after();
+		float fps = timing.get_current_average_FPS();
+
+		std::cout << "State updates per second: " << fps;
+
+		if(validatePositions)
+		{
+			referenceModel->step();
+			float error = model->compareParticlesState(*referenceModel);
+			std::cout << " ;               average distance vs reference: " << error;
+		}
+		std::cout << "\r" << std::flush;
 	}
 
-	return 0;
+	return EXIT_SUCCESS;
 }
+

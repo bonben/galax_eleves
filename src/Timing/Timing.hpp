@@ -7,16 +7,19 @@
 class Timing
 {
 private:
+	std::vector<std::chrono::duration<float, std::milli>> duration_vec;
+        float current_average_FPS;
+
 	std::chrono::time_point<std::chrono::high_resolution_clock> t_display;
 	std::chrono::time_point<std::chrono::high_resolution_clock> t_before;
 	std::chrono::time_point<std::chrono::high_resolution_clock> t_after;
-	std::vector<std::chrono::duration<float, std::micro>> duration_vec;
 
 public:
 	Timing();
 
 	void sample_before();
 	void sample_after();
+        float get_current_average_FPS() const;
 };
 
 

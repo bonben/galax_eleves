@@ -17,6 +17,8 @@ protected:
 public:
     Model(const Initstate& initstate, Particles& particles);
 
+    float compareParticlesState(const Model& reference);
+
     virtual ~Model() = default;
 
     virtual void step() = 0;

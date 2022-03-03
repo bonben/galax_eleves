@@ -8,3 +8,5 @@ doc/latex/*
 
 !obj/.gitkeep
 !bin/DroidSans.ttf
+
+build/

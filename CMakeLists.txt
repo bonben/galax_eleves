@@ -14,7 +14,7 @@ option(GALAX_LINK_CUDA "Link with the CUDA library (used for GPU model)"        
 option(GALAX_LINK_OMP  "Link with the OMP  library (used for CPU_FAST model)"    OFF)
 
 # Enable C++11
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Specify bin path
@@ -110,7 +110,9 @@ if(GALAX_LINK_SDL2)
     find_package(GLUT REQUIRED)
     if(GLUT_FOUND)
         message(STATUS "Galax - Library found: GLUT")
-        include_directories(PUBLIC "${GLUT_INCLUDE_DIR}")
+        if(${GLUT_INCLUDE_DIR}) # In fedora this is not necessarily set for some reason, but everything still works...
+            include_directories(PUBLIC "${GLUT_INCLUDE_DIR}")
+        endif()
         target_link_libraries(galax_display PUBLIC ${GLUT_LIBRARY})
     endif(GLUT_FOUND)
 
@@ -129,3 +131,4 @@ if(GALAX_LINK_SDL2)
         target_link_libraries(galax_display PUBLIC ${SDL2_LIBRARIES})
     endif(SDL2_FOUND)
 endif(GALAX_LINK_SDL2)
+
