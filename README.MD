@@ -38,13 +38,12 @@ The objective of the course is to accelerate the simulation. You must maximize t
 
 ### Extras
 
-Any extra feature will be well appreciated and taken into account for the evaluation : 
+Any extra feature will be well appreciated and taken into account for the evaluation :
 * Improvement of the graphical rendering
 * Inclusion of other libraries into the cmake build automation
 * Addition of algorithmic variants of the nbody problem (n² -> nlogn)
 * Include Galax as a wrapper for other languages
 * ...
-
 ## How to compile and run the code
 
 Galax uses `cmake` in order to automate building.
@@ -56,20 +55,20 @@ Galax needs cmake and the g++ compiler to be compiled.
 
 ```bash
     git clone --recursive git@github.com:bonben/galax_eleves.git # clone repository and update git submodules
-    mkdir galax_eleves/build # create a build directory
-    cd galax_eleves/build # switch to it
-    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-mavx2" # configure project with cmake, using Release build and avx2
-    make #make
+    cd galax_eleves
+    cmake -E make_directory "build" # create a build directory
+    cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-mavx2" .. # configure project with cmake, using Release build and avx2
+    cmake --build "build" --config Release --parallel
 ```
 
 You can then launch the compiled binary :
 ```bash
-    ./bin/galax
+    ./build/bin/galax
 ```
 
 You can access the help with the following command :
 ```bash
-    ./bin/galax -h
+    ./build/bin/galax -h
 ```
 
 For now, no graphical display has been set up and therefore only the number of frame per second (which correspond to the number of simulation time steps executed per second) will be displayed in the terminal.
@@ -83,9 +82,9 @@ Install those dependencies (already installed on campux).
 ```
 Now the graphical display should be activated through cmake configuration, and the project be rebuilt.
 ```bash
-    # in the "build" directory
-    cmake .. -DGALAX_LINK_SDL2=ON
-    make
+    cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DGALAX_LINK_SDL2=ON ..
+    cmake --build "build" --config Release --parallel
+    ./build/bin/galax --display SDL2
 ```
 Launching galax should now open a window with the graphical display.
 
@@ -94,10 +93,9 @@ Launching galax should now open a window with the graphical display.
 For now, the performance (FPS: Frame Per Second) is low.
 It is possible to accelerate the processing by using OpenMP for multithreading and the xsimd project (https://github.com/xtensor-stack/xsimd) for vectorization.
 ```bash
-    # in the "build" directory
-    cmake .. -DGALAX_LINK_OMP=ON
-    make
-    ./bin/galax -c CPU_FAST # use CPU_FAST version with multithreading & vectorization
+    cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DGALAX_LINK_OMP=ON -DCMAKE_CXX_FLAGS="-mavx2" ..
+    cmake --build "build" --config Release --parallel
+    ./build/bin/galax -c CPU_FAST # use CPU_FAST version with multithreading & vectorization
 ```
 
 ### Activating CUDA
@@ -105,8 +103,16 @@ It is possible to accelerate the processing by using OpenMP for multithreading a
 Provided a software platform with a working version of the CUDA toolkit, it is also possible to use the GPU to perform the simulation. Please refer to  online documentation to correctly install CUDA on your system (https://docs.nvidia.com/cuda/).
 
 ```bash
-    # in the "build" directory
-    cmake .. -DGALAX_LINK_CUDA=ON -DCUDA_TOOLKIT_ROOT_DIR="/usr"
-    make
-    ./bin/galax -c GPU # use GPU version
+    cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DGALAX_LINK_CUDA=ON -DCUDA_TOOLKIT_ROOT_DIR="/usr" ..
+    cmake --build "build" --config Release --parallel
+    ./build/bin/galax -c GPU # use GPU version
 ```
+
+### Validating your results
+
+To check that the particles positions computed from your code are in agreement with the reference (slow) model, use the `--validate` option. For instance
+```bash
+    ./build/bin/galax -C CPU_FAST --validate
+```
+will compare the positions of the `CPU` and `CPU_FAST` models at each step.
+
