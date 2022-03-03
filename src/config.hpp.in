@@ -1,0 +1,6 @@
+#ifndef GALAX_CONFIG_HPP
+#define GALAX_CONFIG_HPP
+
+#define GALAX_ROOT "@PROJECT_SOURCE_DIR@"
+
+#endif

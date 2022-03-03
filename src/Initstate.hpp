@@ -4,10 +4,12 @@
 #include <string>
 #include <vector>
 
+#include "config.hpp"
+
 class Initstate
 {
 private:
-    const std::string filename = "../data/dubinski.tab";
+    const std::string filename = std::string(GALAX_ROOT) + "/data/dubinski.tab";
     const int max_n_particles  = 81920;
 
 public:

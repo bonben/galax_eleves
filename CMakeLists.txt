@@ -37,6 +37,9 @@ set(SRC_FILES_MAIN    ${CMAKE_CURRENT_SOURCE_DIR}/src/Model/Model.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/src/Timing/Timing.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/config.hpp.in" "${CMAKE_CURRENT_BINARY_DIR}/src/config.hpp" @ONLY)
+include_directories (PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/src/")
+
 # add library & executable
 add_library (galax_display SHARED ${SRC_FILES_DISPLAY})
 if(GALAX_LINK_CUDA)
