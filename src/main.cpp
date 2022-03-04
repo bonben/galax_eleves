@@ -89,7 +89,7 @@ int main(int argc, char ** argv)
 #endif
 #ifdef GALAX_MODEL_GPU
 	else if (core == "GPU")
-		model = std::make_unique<MODEL_GPU>(initstate, particles);
+		model = std::make_unique<Model_GPU>(initstate, particles);
 #endif
 	else // TODO : add exception
 		exit(EXIT_FAILURE);
