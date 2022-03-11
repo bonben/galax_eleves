@@ -2,6 +2,7 @@
 #define MODEL_HPP_
 
 #include <vector>
+#include <tuple>
 
 #include "../Initstate.hpp"
 #include "../Particles.hpp"
@@ -17,7 +18,7 @@ protected:
 public:
     Model(const Initstate& initstate, Particles& particles);
 
-    float compareParticlesState(const Model& reference);
+    std::tuple<float, float, float> compareParticlesState(const Model& reference, bool returnRelativeDistances = false);
 
     virtual ~Model() = default;
 

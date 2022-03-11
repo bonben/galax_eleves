@@ -118,8 +118,10 @@ int main(int argc, char ** argv)
 		if(validatePositions)
 		{
 			referenceModel->step();
-			float error = model->compareParticlesState(*referenceModel);
-			std::cout << " ;               average distance vs reference: " << error;
+                        float average_error, error_min, error_max;
+                        std::tie(error_min, error_max, average_error) = model->compareParticlesState(*referenceModel, /*returnRelativeDistances*/ true);
+			std::cout << " ;               average distance vs reference: " << average_error
+                                  << "; min error : " << error_min << "; max error : " << error_max;
 		}
 		std::cout << "\r" << std::flush;
 	}
