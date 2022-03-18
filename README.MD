@@ -30,6 +30,7 @@ The objective of the course is to accelerate the simulation. You must maximize t
 
 * Project logbook: you will keep an up-to-date document explaining your experiences, your results, your choices, taken from day to day. No need to detail, to put images, to spend time on formatting. You will use text format files that have been created for you [here](https://cloud.imt-atlantique.fr/index.php/s/qJ7A5kAfRnmH6zx).
 * Presentation (10 minutes + 5 minutes questions)
+  * Steps fo final implementation
   * Description of the final implementation
   * Demonstration
   * A summary of all results measured for the different developped solutions, and their critical analysis
