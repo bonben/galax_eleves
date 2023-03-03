@@ -97,7 +97,8 @@ int main(int argc, char ** argv)
 	bool done = false;
 
 	std::cout << std::setw(3);
-
+	float avg_fps=0;
+	float alpha=0.1;
 	while (!done)
 	{
 		// display particles
@@ -112,8 +113,9 @@ int main(int argc, char ** argv)
 
 		timing.sample_after();
 		float fps = timing.get_current_average_FPS();
+		avg_fps = (1-alpha)*avg_fps+alpha*fps;
 
-		std::cout << "State updates per second: " << fps;
+		std::cout << "State updates per second: " << fps << "average FPS : " << avg_fps;
 
 		if(validatePositions)
 		{

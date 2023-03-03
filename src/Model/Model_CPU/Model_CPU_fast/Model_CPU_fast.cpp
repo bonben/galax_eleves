@@ -1,7 +1,7 @@
 #ifdef GALAX_MODEL_CPU_FAST
 
 #include <cmath>
-
+#include <iostream>
 #include "Model_CPU_fast.hpp"
 
 #include <xsimd/xsimd.hpp>
@@ -19,9 +19,52 @@ Model_CPU_fast
 void Model_CPU_fast
 ::step()
 {
+    // using b_type = xsimd::batch<float, xsimd::avx2>;
+
     std::fill(accelerationsx.begin(), accelerationsx.end(), 0);
     std::fill(accelerationsy.begin(), accelerationsy.end(), 0);
     std::fill(accelerationsz.begin(), accelerationsz.end(), 0);
+    
+    // std::size_t simd_size = b_type.size();
+    // std::size_t number_particules= accelerationsx.size();
+    // std::size_t vec_size = size - size % inc;
+    
+    float diffx,diffy,diffz;
+    float dij,dij_mj,dij_mi;
+    for (int i = 0; i < n_particles; i++)
+	{
+		for (int j = 0; j < i; j++)
+		{
+			
+            diffx = particles.x[j] - particles.x[i];
+            diffy = particles.y[j] - particles.y[i];
+            diffz = particles.z[j] - particles.z[i];
+
+            dij = diffx * diffx + diffy * diffy + diffz * diffz;
+
+            if (dij < 1.0)
+            {
+                dij = 10.0;
+            }
+            else
+            {
+                dij = dij*std::sqrt(dij);
+                dij = 10.0 / dij;
+            }
+
+            dij_mj = dij * initstate.masses[j];
+            dij_mi = dij * initstate.masses[i];
+
+            accelerationsx[i] += diffx * dij_mj;
+            accelerationsy[i] += diffy * dij_mj;
+            accelerationsz[i] += diffz * dij_mj;
+
+            accelerationsx[j] -= diffx * dij_mi;
+            accelerationsy[j] -= diffy * dij_mi;
+            accelerationsz[j] -= diffz * dij_mi;
+		}
+	}
+
 
 // OMP  version
 // #pragma omp parallel for

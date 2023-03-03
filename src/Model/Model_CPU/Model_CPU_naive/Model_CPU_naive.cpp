@@ -15,28 +15,36 @@ void Model_CPU_naive
 	std::fill(accelerationsy.begin(), accelerationsy.end(), 0);
 	std::fill(accelerationsz.begin(), accelerationsz.end(), 0);
 
+	// we do the same operation twice
 	for (int i = 0; i < n_particles; i++)
 	{
 		for (int j = 0; j < n_particles; j++)
 		{
 			if(i != j)
 			{
+				// la, pas trés utile de prendre l'array pour i
 				const float diffx = particles.x[j] - particles.x[i];
 				const float diffy = particles.y[j] - particles.y[i];
 				const float diffz = particles.z[j] - particles.z[i];
 
+				// ici, on doit attendre que les instructions précédentes soit fait
+				// seul endroit ou les instructions dependent des autres
 				float dij = diffx * diffx + diffy * diffy + diffz * diffz;
 
+				
 				if (dij < 1.0)
 				{
 					dij = 10.0;
 				}
 				else
 				{
+					// is this the best way to compute the distance ? 
 					dij = std::sqrt(dij);
-					dij = 10.0 / (dij * dij * dij);
+					dij = 10.0 / (dij * dij * dij);//-mrecip
 				}
 
+				// On accede à j (variable), on write sur i (constante)
+				// calcul de dij avant '3 fois le meme calcul)
 				accelerationsx[i] += diffx * dij * initstate.masses[j];
 				accelerationsy[i] += diffy * dij * initstate.masses[j];
 				accelerationsz[i] += diffz * dij * initstate.masses[j];
@@ -44,6 +52,8 @@ void Model_CPU_naive
 		}
 	}
 
+
+	// quand une boucle sur i est finie, on peut commencer cette boucle
 	for (int i = 0; i < n_particles; i++)
 	{
 		velocitiesx[i] += accelerationsx[i] * 2.0f;
