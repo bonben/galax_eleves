@@ -18,21 +18,25 @@ Model_CPU_fast
 
 void Model_CPU_fast
 ::step()
-{
-    // using b_type = xsimd::batch<float, xsimd::avx2>;
+{   
+    using b_type = xsimd::batch<float, xsimd::avx2>;
 
     std::fill(accelerationsx.begin(), accelerationsx.end(), 0);
     std::fill(accelerationsy.begin(), accelerationsy.end(), 0);
     std::fill(accelerationsz.begin(), accelerationsz.end(), 0);
     
-    // std::size_t simd_size = b_type.size();
-    // std::size_t number_particules= accelerationsx.size();
-    // std::size_t vec_size = size - size % inc;
+    std::size_t inc = b_type.size();
+    std::size_t size;
+    
+    std::size_t vec_size;
     
     float diffx,diffy,diffz;
     float dij,dij_mj,dij_mi;
+    
     for (int i = 0; i < n_particles; i++)
 	{
+        size=n_particles-1-i;
+        vec_size=size-size%inc
 		for (int j = 0; j < i; j++)
 		{
 			
@@ -42,18 +46,18 @@ void Model_CPU_fast
 
             dij = diffx * diffx + diffy * diffy + diffz * diffz;
 
-            if (dij < 1.0)
+            if (dij > 1)
             {
-                dij = 10.0;
+                dij = 10.0/(dij*std::sqrt(dij));// looks like it's the fastest way
+                dij_mj = dij * initstate.masses[j];
+                dij_mi = dij * initstate.masses[i];
+
             }
             else
             {
-                dij = dij*std::sqrt(dij);
-                dij = 10.0 / dij;
+                dij_mj = 10.0 * initstate.masses[j];
+                dij_mi = 10.0 * initstate.masses[i];
             }
-
-            dij_mj = dij * initstate.masses[j];
-            dij_mi = dij * initstate.masses[i];
 
             accelerationsx[i] += diffx * dij_mj;
             accelerationsy[i] += diffy * dij_mj;
@@ -62,7 +66,19 @@ void Model_CPU_fast
             accelerationsx[j] -= diffx * dij_mi;
             accelerationsy[j] -= diffy * dij_mi;
             accelerationsz[j] -= diffz * dij_mi;
+            
 		}
+	}
+
+    // quand une boucle sur i est finie, on peut commencer cette boucle
+	for (int i = 0; i < n_particles; i++)
+	{
+		velocitiesx[i] += accelerationsx[i] * 2.0f;
+		velocitiesy[i] += accelerationsy[i] * 2.0f;
+		velocitiesz[i] += accelerationsz[i] * 2.0f;
+		particles.x[i] += velocitiesx   [i] * 0.1f;
+		particles.y[i] += velocitiesy   [i] * 0.1f;
+		particles.z[i] += velocitiesz   [i] * 0.1f;
 	}
 
 

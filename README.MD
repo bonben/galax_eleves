@@ -109,6 +109,14 @@ Provided a software platform with a working version of the CUDA toolkit, it is a
     ./build/bin/galax -c GPU # use GPU version
 ```
 
+### Compilation specific arguments : 
+
+```bash
+cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-mavx2 -mrecip " ..
+cmake --build "build" --config Release --parallel
+./build/bin/galax -c CPU_FAST --validate
+```
+
 ### Validating your results
 
 To check that the particles positions computed from your code are in agreement with the reference (slow) model, use the `--validate` option. For instance
