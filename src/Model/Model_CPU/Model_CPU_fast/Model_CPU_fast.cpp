@@ -16,59 +16,125 @@ Model_CPU_fast
 {
 }
 
-void Model_CPU_fast
-::step()
-{   
-    using b_type = xsimd::batch<float, xsimd::avx2>;
 
-    std::fill(accelerationsx.begin(), accelerationsx.end(), 0);
-    std::fill(accelerationsy.begin(), accelerationsy.end(), 0);
-    std::fill(accelerationsz.begin(), accelerationsz.end(), 0);
-    
-    std::size_t inc = b_type.size();
-    std::size_t size;
-    
-    std::size_t vec_size;
-    
-    float diffx,diffy,diffz;
-    float dij,dij_mj,dij_mi;
-    
-    for (int i = 0; i < n_particles; i++)
-	{
-        size=n_particles-1-i;
-        vec_size=size-size%inc
-		for (int j = 0; j < i; j++)
-		{
-			
-            diffx = particles.x[j] - particles.x[i];
-            diffy = particles.y[j] - particles.y[i];
-            diffz = particles.z[j] - particles.z[i];
+inline void update_acceleration(const float &xi, const float &yi,const float &zi,\
+            const float &xj, const float &yj, const float &zj,\
+            const float &massei, const float &massej,\
+            float &accelerationsxi, float &accelerationsyi, float &accelerationszi,\
+            float &accelerationsxj, float &accelerationsyj, float &accelerationszj
+            ){
 
+            
+            float dij, dij_mj,dij_mi;
+            float diffx = xj - xi;
+            float diffy = yj - yi;
+            float diffz = zj - zi;
             dij = diffx * diffx + diffy * diffy + diffz * diffz;
 
             if (dij > 1)
             {
-                dij = 10.0/(dij*std::sqrt(dij));// looks like it's the fastest way
-                dij_mj = dij * initstate.masses[j];
-                dij_mi = dij * initstate.masses[i];
-
+                dij = 1./(dij*std::sqrt(dij));// looks like it's the fastest way
+                dij_mj = dij * massej;
+                dij_mi = dij * massei;
             }
             else
             {
-                dij_mj = 10.0 * initstate.masses[j];
-                dij_mi = 10.0 * initstate.masses[i];
+                dij_mj = massej;
+                dij_mi = massei;
             }
 
-            accelerationsx[i] += diffx * dij_mj;
-            accelerationsy[i] += diffy * dij_mj;
-            accelerationsz[i] += diffz * dij_mj;
+            accelerationsxi += diffx * dij_mj;
+            accelerationsyi += diffy * dij_mj;
+            accelerationszi += diffz * dij_mj;
+            accelerationsxj -= diffx * dij_mi;
+            accelerationsyj -= diffy * dij_mi;
+            accelerationszj -= diffz * dij_mi;
+}
 
-            accelerationsx[j] -= diffx * dij_mi;
-            accelerationsy[j] -= diffy * dij_mi;
-            accelerationsz[j] -= diffz * dij_mi;
+inline void update_block_full(int i_min, int i_max,int j_min,int j_max,float* x, float* y, float* z, const float* masses, float* accelerationsx, float* accelerationsy, float* accelerationsz){
+    for (int i = i_min; i <  i_max; i++){
+            for(int j = j_min; j<j_max; j++){
+                update_acceleration(
+                        x[i], y[i], z[i],
+                        x[j], y[j], z[j],
+                        masses[i], masses[j],
+                        accelerationsx[i], accelerationsy[i], accelerationsz[i],
+                        accelerationsx[j], accelerationsy[j], accelerationsz[j]
+                    );
+            }
+    }
+}
+
+inline void update_block_triangular(int i_min, int i_max,float* x, float* y, float* z, const float* masses, float* accelerationsx, float* accelerationsy, float* accelerationsz){
+    for (int i = i_min; i <  i_max; i++){
+            for(int j =i_min; j<i; j++){
+                update_acceleration(
+                        x[i], y[i], z[i],
+                        x[j], y[j], z[j],
+                        masses[i], masses[j],
+                        accelerationsx[i], accelerationsy[i], accelerationsz[i],
+                        accelerationsx[j], accelerationsy[j], accelerationsz[j]
+                    );
+            }
+    }
+}
+
+// }
+void Model_CPU_fast
+::step()
+{   
+    using b_type = xsimd::batch<float, xsimd::avx2>;
+    // std::size_t inc = b_type.size();
+    // std::size_t size;
+    // std::size_t vec_size;
             
-		}
-	}
+    std::fill(accelerationsx.begin(), accelerationsx.end(), 0);
+    std::fill(accelerationsy.begin(), accelerationsy.end(), 0);
+    std::fill(accelerationsz.begin(), accelerationsz.end(), 0);
+    
+    float diffx,diffy,diffz;
+    float dij,dij_mj,dij_mi;
+
+    //operate directly in memory
+    float* x = particles.x.data();
+    float* y =  particles.y.data();
+    float* z =  particles.z.data();
+    float* ax= accelerationsx.data();
+    float* ay= accelerationsy.data();
+    float* az= accelerationsz.data();
+    const float* masses = initstate.masses.data();
+    const float G = 10.0;
+
+    int memory_block_size = 16;
+
+
+    int number_blocks = (n_particles+memory_block_size-1)/memory_block_size ;
+
+    for (int block_id_i = 0; block_id_i < number_blocks; block_id_i++)
+	{
+        int min_i = block_id_i*memory_block_size;
+        int max_i = (block_id_i+1)*memory_block_size;
+        if (max_i > n_particles) max_i = n_particles;
+        update_block_triangular(min_i,max_i,x,y,z,masses,ax,ay,az);
+        // other blocks on the lower triangle
+        for (int block_id_j = 0; block_id_j < block_id_i; block_id_j++)
+        	{   
+                int min_i=block_id_i*memory_block_size;
+                int max_i=(block_id_i+1)*memory_block_size;
+                int min_j=block_id_j*memory_block_size;
+                int max_j = (block_id_j+1)*memory_block_size;
+                if (max_i > n_particles) max_i = n_particles;
+                if (max_j > n_particles) max_j = n_particles;
+                update_block_full(min_i,max_i,min_j,max_j,x,y,z,masses,ax,ay,az);  
+        }
+    
+    }
+
+    for(int i =0; i<n_particles; i++){
+        accelerationsx[i] *= G;
+        accelerationsy[i] *= G;
+        accelerationsz[i] *= G;
+    }
 
     // quand une boucle sur i est finie, on peut commencer cette boucle
 	for (int i = 0; i < n_particles; i++)
@@ -76,9 +142,9 @@ void Model_CPU_fast
 		velocitiesx[i] += accelerationsx[i] * 2.0f;
 		velocitiesy[i] += accelerationsy[i] * 2.0f;
 		velocitiesz[i] += accelerationsz[i] * 2.0f;
-		particles.x[i] += velocitiesx   [i] * 0.1f;
-		particles.y[i] += velocitiesy   [i] * 0.1f;
-		particles.z[i] += velocitiesz   [i] * 0.1f;
+		x[i] += velocitiesx   [i] * 0.1f;
+		y[i] += velocitiesy   [i] * 0.1f;
+		z[i] += velocitiesz   [i] * 0.1f;
 	}
 
 
@@ -91,12 +157,12 @@ void Model_CPU_fast
 
 // OMP + xsimd version
 // #pragma omp parallel for
-//     for (int i = 0; i < n_particles; i += b_type::size)
+//     for (int i = 0; i < compute_accelerationn_particles; i += b_type::size)
 //     {
 //         // load registers body i
 //         const b_type rposx_i = b_type::load_unaligned(&particles.x[i]);
-//         const b_type rposy_i = b_type::load_unaligned(&particles.y[i]);
-//         const b_type rposz_i = b_type::load_unaligned(&particles.z[i]);
+//         const b_type rposy_i = b_type::load_unaligned(&y[i]);
+//         const b_type rposz_i = b_type::load_unaligned(&z[i]);
 //               b_type raccx_i = b_type::load_unaligned(&accelerationsx[i]);
 //               b_type raccy_i = b_type::load_unaligned(&accelerationsy[i]);
 //               b_type raccz_i = b_type::load_unaligned(&accelerationsz[i]);

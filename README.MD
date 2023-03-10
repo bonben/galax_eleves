@@ -117,6 +117,8 @@ cmake --build "build" --config Release --parallel
 ./build/bin/galax -c CPU_FAST --validate
 ```
 
+gcc -xc++ -lstdc++ -shared-libgcc
+
 ### Validating your results
 
 To check that the particles positions computed from your code are in agreement with the reference (slow) model, use the `--validate` option. For instance
