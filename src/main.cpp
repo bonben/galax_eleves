@@ -115,7 +115,7 @@ int main(int argc, char ** argv)
 		float fps = timing.get_current_average_FPS();
 		avg_fps = (1-alpha)*avg_fps+alpha*fps;
 
-		std::cout << "State updates per second: " << fps << "average FPS : " << avg_fps;
+		std::cout << "State updates per second: " << fps;// << "average FPS : " << avg_fps;
 
 		if(validatePositions)
 		{
