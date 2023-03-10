@@ -109,15 +109,7 @@ Provided a software platform with a working version of the CUDA toolkit, it is a
     ./build/bin/galax -c GPU # use GPU version
 ```
 
-### Compilation specific arguments : 
 
-```bash
-cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-mavx2 -mrecip -O1" ..
-cmake --build "build" --config Release --parallel
-./build/bin/galax -c CPU_FAST --validate
-```
-
-gcc -xc++ -lstdc++ -shared-libgcc
 
 ### Validating your results
 
@@ -127,3 +119,19 @@ To check that the particles positions computed from your code are in agreement w
 ```
 will compare the positions of the `CPU` and `CPU_FAST` models at each step.
 
+### Compilation specific arguments : 
+
+```bash
+cmake -E make_directory "build" # create a build directory
+cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-mavx2 -mrecip -O1" ..
+cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DGALAX_LINK_OMP=ON -DCMAKE_CXX_FLAGS="-mavx2" ..
+cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DGALAX_LINK_SDL2=OFF ..
+cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DGALAX_LINK_CUDA=ON -DCUDA_TOOLKIT_ROOT_DIR="/usr" ..
+cmake --build "build" --config Release --parallel
+./build/bin/galax -c CPU_FAST --validate
+./build/bin/galax -c GPU --validate # use GPU version
+
+```
+
+to see equivalent results in godbolt than g++ : 
+gcc -xc++ -lstdc++ -shared-libgcc
