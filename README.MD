@@ -112,7 +112,7 @@ Provided a software platform with a working version of the CUDA toolkit, it is a
 ### Compilation specific arguments : 
 
 ```bash
-cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-mavx2 -mrecip " ..
+cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-mavx2 -mrecip -O1" ..
 cmake --build "build" --config Release --parallel
 ./build/bin/galax -c CPU_FAST --validate
 ```

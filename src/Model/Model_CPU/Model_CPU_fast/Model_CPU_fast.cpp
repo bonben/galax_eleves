@@ -105,29 +105,37 @@ void Model_CPU_fast
     const float* masses = initstate.masses.data();
     const float G = 10.0;
 
-    int memory_block_size = 16;
+    int memory_block_size = 8;
 
 
-    int number_blocks = (n_particles+memory_block_size-1)/memory_block_size ;
+    int number_blocks = n_particles/memory_block_size ;
 
     for (int block_id_i = 0; block_id_i < number_blocks; block_id_i++)
 	{
         int min_i = block_id_i*memory_block_size;
-        int max_i = (block_id_i+1)*memory_block_size;
-        if (max_i > n_particles) max_i = n_particles;
+        int max_i = min_i+memory_block_size;
+       
         update_block_triangular(min_i,max_i,x,y,z,masses,ax,ay,az);
         // other blocks on the lower triangle
-        for (int block_id_j = 0; block_id_j < block_id_i; block_id_j++)
-        	{   
-                int min_i=block_id_i*memory_block_size;
-                int max_i=(block_id_i+1)*memory_block_size;
+        for (int block_id_j = 0; block_id_j < block_id_i; block_id_j += 1)
+        {   
                 int min_j=block_id_j*memory_block_size;
-                int max_j = (block_id_j+1)*memory_block_size;
-                if (max_i > n_particles) max_i = n_particles;
-                if (max_j > n_particles) max_j = n_particles;
+                int max_j = min_j+memory_block_size;
                 update_block_full(min_i,max_i,min_j,max_j,x,y,z,masses,ax,ay,az);  
         }
-    
+    }
+
+    bool is_enough = (n_particles % memory_block_size) == 0;
+    if (!is_enough){
+        int min_i = number_blocks*memory_block_size;
+        int max_i = n_particles;
+        update_block_triangular(min_i,max_i,x,y,z,masses,ax,ay,az);
+        for (int block_id_j = 0; block_id_j < number_blocks; block_id_j++)
+        	{   
+                int min_j=block_id_j*memory_block_size;
+                int max_j = min_j+memory_block_size;
+                update_block_full(min_i,max_i,min_j,max_j,x,y,z,masses,ax,ay,az);  
+        }
     }
 
     for(int i =0; i<n_particles; i++){
