@@ -17,31 +17,23 @@ Model_CPU_fast
 }
 
 
-inline void update_acceleration(const float &xi, const float &yi,const float &zi,\
+inline void compute_difference(const float &xi, const float &yi,const float &zi,\
             const float &xj, const float &yj, const float &zj,\
-            const float &massei, const float &massej,\
+            float &diffx, float &diffy, float &diffz
+            ){
+            
+            diffx = xj - xi;
+            diffy = yj - yi;
+            diffz = zj - zi;
+            dij = diffx * diffx + diffy * diffy + diffz * diffz;
+}
+
+
+inline void accumulate_acceleration(const float &diffx, const float &diffy, const float &diffz,\
+            const float &dij_mj, const float &dij_mi,\
             float &accelerationsxi, float &accelerationsyi, float &accelerationszi,\
             float &accelerationsxj, float &accelerationsyj, float &accelerationszj
             ){
-
-            
-            float dij, dij_mj,dij_mi;
-            float diffx = xj - xi;
-            float diffy = yj - yi;
-            float diffz = zj - zi;
-            dij = diffx * diffx + diffy * diffy + diffz * diffz;
-
-            if (dij > 1)
-            {
-                dij = 1./(dij*std::sqrt(dij));// looks like it's the fastest way
-                dij_mj = dij * massej;
-                dij_mi = dij * massei;
-            }
-            else
-            {
-                dij_mj = massej;
-                dij_mi = massei;
-            }
 
             accelerationsxi += diffx * dij_mj;
             accelerationsyi += diffy * dij_mj;
@@ -49,6 +41,51 @@ inline void update_acceleration(const float &xi, const float &yi,const float &zi
             accelerationsxj -= diffx * dij_mi;
             accelerationsyj -= diffy * dij_mi;
             accelerationszj -= diffz * dij_mi;
+}
+
+inline void compute_forces(float &dij, const float &mj,const float &mi, float &dij_mj, float &dij_mi){
+    if (dij > 1)
+    {
+        dij = 1./(dij*std::sqrt(dij));// looks like it's the fastest way
+        dij_mj = dij * mj;
+        dij_mi = dij * mi;
+    }
+    else
+    {
+        dij_mj = mj;
+        dij_mi = mi;
+
+    }
+
+}
+
+inline void update_acceleration(const float &xi, const float &yi,const float &zi,\
+            const float &xj, const float &yj, const float &zj,\
+            const float &massei, const float &massej,\
+            float &accelerationsxi, float &accelerationsyi, float &accelerationszi,\
+            float &accelerationsxj, float &accelerationsyj, float &accelerationszj
+            ){
+            // Total : 20 memory access
+            // 8 memory access
+            // 6 temporary variable (1 can be avoided)
+            // 6 memory write
+
+            const float diffx,diffy,diffz;
+            const float dij,dij_mj,dij_mi;
+            
+            // 6 memory access
+            // 4 memory write
+            compute_difference(xi,yi,zi,xj,yj,zj,diffx,diffy,diffz,dij)
+
+            // 2 memory access
+            // 1 other variable (dij)
+            // 2 memory write
+            compute_forces(dij,massej,massei,dij_mj,dij_mi)
+
+            // 5 memory access
+            // 6 memory write
+            accumulate_acceleration(diffx,diffy,diffz,dij_mj,dij_mi,\
+            accelerationsxi,accelerationsyi,accelerationszi,accelerationsxj,accelerationsyj,accelerationszj);
 }
 
 inline void update_block_full(int i_min, int i_max,int j_min,int j_max,float* x, float* y, float* z, const float* masses, float* accelerationsx, float* accelerationsy, float* accelerationsz){
