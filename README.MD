@@ -58,7 +58,7 @@ Galax needs cmake and the g++ compiler to be compiled.
     git clone --recursive git@github.com:bonben/galax_eleves.git # clone repository and update git submodules
     cd galax_eleves
     cmake -E make_directory "build" # create a build directory
-    cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-mavx2" .. # configure project with cmake, using Release build and avx2
+    cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-march=native" .. # configure project with cmake, using Release build and native arch
     cmake --build "build" --config Release --parallel
 ```
 
