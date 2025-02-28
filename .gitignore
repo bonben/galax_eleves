@@ -10,3 +10,4 @@ doc/latex/*
 !bin/DroidSans.ttf
 
 build/
+*.user
