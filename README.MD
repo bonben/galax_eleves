@@ -12,7 +12,7 @@ You can generate the hierarchy of the different classes as well as a list of the
 
 ## Means
 
-You will work in groups of 2 (except one group of three). Fill the document here : [Groups](https://partage.imt.fr/index.php/s/i85BRAPKFziT3pq).
+You will work in groups of 2 (except one group of three). Fill the document here : [Groups](https://partage.imt.fr/index.php/s/9eigeTpXAe7KrBW).
 
 Please specify if you plan to implement a GPU version of galax in the corresponding column.
 
