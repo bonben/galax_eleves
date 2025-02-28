@@ -57,19 +57,20 @@ Galax needs cmake and the g++ compiler to be compiled.
 ```bash
     git clone --recursive git@github.com:bonben/galax_eleves.git # clone repository and update git submodules
     cd galax_eleves
-    cmake -E make_directory "build" # create a build directory
-    cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-march=native" .. # configure project with cmake, using Release build and native arch
-    cmake --build "build" --config Release --parallel
+    mkdir build # create a build directory
+    cd build
+    cmake  -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-march=native" .. # configure project with cmake, using Release build and native arch
+    make -j # compile the project
 ```
 
 You can then launch the compiled binary :
 ```bash
-    ./build/bin/galax
+    ./bin/galax
 ```
 
 You can access the help with the following command :
 ```bash
-    ./build/bin/galax -h
+    ./bin/galax -h
 ```
 
 For now, no graphical display has been set up and therefore only the number of frame per second (which correspond to the number of simulation time steps executed per second) will be displayed in the terminal.
@@ -77,26 +78,27 @@ For now, no graphical display has been set up and therefore only the number of f
 ### Graphical display
 
 Galax relies on SDL2 and OpenGL to propose a graphical display.
-Install those dependencies (already installed on campux).
-```bash
-    sudo apt install freeglut3-dev libglew-dev libsdl2-dev
-```
+
 Now the graphical display should be activated through cmake configuration, and the project be rebuilt.
 ```bash
-    cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DGALAX_LINK_SDL2=ON ..
-    cmake --build "build" --config Release --parallel
-    ./build/bin/galax --display SDL2
+    cmake -DGALAX_LINK_SDL2=ON ..
+    make -j
+    ./bin/galax --display SDL2
 ```
 Launching galax should now open a window with the graphical display.
 
+If dependencies are missing:
+```bash
+    sudo apt install freeglut3-dev libglew-dev libsdl2-dev
+```
 ### Activating OMP
 
 For now, the performance (FPS: Frame Per Second) is low.
 It is possible to accelerate the processing by using OpenMP for multithreading and the xsimd project (https://github.com/xtensor-stack/xsimd) for vectorization.
 ```bash
-    cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DGALAX_LINK_OMP=ON -DCMAKE_CXX_FLAGS="-march=native" ..
-    cmake --build "build" --config Release --parallel
-    ./build/bin/galax -c CPU_FAST # use CPU_FAST version with multithreading & vectorization
+    cmake -DGALAX_LINK_OMP=ON ..
+    make -j
+    ./bin/galax -c CPU_FAST # use CPU_FAST version with multithreading & vectorization
 ```
 
 ### Activating CUDA
@@ -104,16 +106,16 @@ It is possible to accelerate the processing by using OpenMP for multithreading a
 Provided a software platform with a working version of the CUDA toolkit, it is also possible to use the GPU to perform the simulation. Please refer to  online documentation to correctly install CUDA on your system (https://docs.nvidia.com/cuda/).
 
 ```bash
-    cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release -DGALAX_LINK_CUDA=ON -DCUDA_TOOLKIT_ROOT_DIR="/usr" ..
-    cmake --build "build" --config Release --parallel
-    ./build/bin/galax -c GPU # use GPU version
+    cmake -DGALAX_LINK_CUDA=ON -DCUDA_TOOLKIT_ROOT_DIR="/usr" ..
+    make -j
+    ./bin/galax -c GPU # use GPU version
 ```
 
 ### Validating your results
 
 To check that the particles positions computed from your code are in agreement with the reference (slow) model, use the `--validate` option. For instance
 ```bash
-    ./build/bin/galax -C CPU_FAST --validate
+    ./bin/galax -C CPU_FAST --validate
 ```
 will compare the positions of the `CPU` and `CPU_FAST` models at each step.
 
