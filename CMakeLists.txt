@@ -20,6 +20,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Specify bin path
 set (EXECUTABLE_OUTPUT_PATH bin/)
 
+if(WIN32)
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
+endif()
+
 # Generate the source files lists
 set(SRC_FILES_CUDA    ${CMAKE_CURRENT_SOURCE_DIR}/src/Model/Model_GPU/kernel.cu
                       ${CMAKE_CURRENT_SOURCE_DIR}/src/Model/Model_GPU/Model_GPU.cpp)
