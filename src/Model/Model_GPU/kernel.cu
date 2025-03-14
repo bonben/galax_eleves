@@ -64,14 +64,14 @@ __global__ void maj_pos(float3 * positionsGPU, float3 * velocitiesGPU, float3 * 
 
 void update_position_cu(float3* positionsGPU, float3* velocitiesGPU, float3* accelerationsGPU, float* massesGPU, int n_particles)
 {
-        int nthreads = 128;
+        int nthreads = 256;
         int nblocks =  (n_particles + (nthreads -1)) / nthreads;
 
         compute_acc<<<nblocks, nthreads>>>(positionsGPU, velocitiesGPU, accelerationsGPU, massesGPU, n_particles);
         maj_pos    <<<nblocks, nthreads>>>(positionsGPU, velocitiesGPU, accelerationsGPU, n_particles);
 }
 
-#endif // GALAX_MODEL_GPU
+#endif //GALAX_MODEL_GPU
 
 
 // #endif // GALAX_MODEL_GPU
