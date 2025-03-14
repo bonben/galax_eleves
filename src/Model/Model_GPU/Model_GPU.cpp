@@ -94,7 +94,7 @@ void Model_GPU
 ::step()
 {	
 
-	cuda_memcpy(accelerationsGPU,  accelerationsf4.data()  , n_particles * sizeof(float4), cudaMemcpyHostToDevice);
+	cuda_memcpy(accelerationsGPU,  accelerationsf3.data()  , n_particles * sizeof(float4), cudaMemcpyHostToDevice);
 	update_position_gpu(positionsGPU,velocitiesGPU,accelerationsGPU,n_particles);
 	cuda_memcpy(positionsf4.data(), positionsGPU, n_particles * sizeof(float4), cudaMemcpyDeviceToHost);
 	for (int i = 0; i < n_particles; i++)
