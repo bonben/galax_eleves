@@ -13,28 +13,20 @@ __global__ void compute_acc(float4 * positionsGPU, float3 * velocitiesGPU, float
         }
         for (int j = 0; j < n_particles; j++)
         {
-                if(i != j)
-                {
+
                         const float diffx = positionsGPU[j].x - positionsGPU[i].x;
                         const float diffy = positionsGPU[j].y - positionsGPU[i].y;
                         const float diffz = positionsGPU[j].z - positionsGPU[i].z;
 
-                        float dij = diffx * diffx + diffy * diffy + diffz * diffz;
-
-                        if (dij < 1.0)
-                        {
-                                dij = 10.0;
-                        }
-                        else
-                        {
-                                dij = std::sqrt(dij);
-                                dij = 10.0 / (dij * dij * dij);
-                        }
+                        float dij = diffx * diffx + diffy * diffy + diffz * diffz + EPS;
+                        dij = std::sqrt(dij);
+                        dij = 10.0 / (dij * dij * dij);
+                        
 
                         accelerationsGPU[i].x += diffx * dij * positionsGPU[j].w;
                         accelerationsGPU[i].y += diffy * dij * positionsGPU[j].w;
                         accelerationsGPU[i].z += diffz * dij * positionsGPU[j].w;
-                }
+                
         }
 
 
