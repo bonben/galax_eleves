@@ -29,10 +29,10 @@ BHTree::BHTree(Region region) : region(region) {
 
 BHTree::BHTree(Region region, std::array<std::unique_ptr<BHTree>, 8>& c) : region(region) {
     mass_center.mass = 0;
-    for(int i = 0; i < 8; i++) {
+    for(int i = 0; i < c.size(); i++) {
         mass_center += c[i]->mass_center;
         children[i] = std::move(c[i]);
-        children[i]->to_string();
+        //children[i]->to_string();
     }
 }
 
@@ -112,15 +112,16 @@ void BHTree::to_string() {
 void BHTree::print_tree() {
     std::ofstream out("out_tree.txt");
     explore(out, 0);
+    /*std::cout << "Print tree" << std::endl;
+    for(auto& c : children) {
+        if(c) c->to_string();
+    }*/
 }
 
 void BHTree::explore(std::ofstream& out, int depth) {
-    if(depth > 1){
-        return;
-    }
     for(int i=0; i< depth; i++)
         out << '\t';
-    out << '[' << region.center.x << ',' << region.center.y << ',' << region.center.y << " " << region.width << " " << mass_center.mass << ']' << std::endl;
+    out << '[' << region.center.x << ',' << region.center.y << ',' << region.center.y << " " << region.width << " " << mass_center.pos.x << " " << mass_center.pos.y << " " << mass_center.pos.z << " " << mass_center.mass << ']' << std::endl;
     for(auto& c : children) {
         if(c)
             c->explore(out, depth+1);

@@ -120,7 +120,7 @@ if(GALAX_LINK_SDL2)
     if(OPENGL_FOUND)
         message(STATUS "Galax - Library found: OPENGL")
         message(STATUS ${OPENGL_INCLUDE_DIR})
-        include_directories(PUBLIC "${OPENGL_INCLUDE_DIR}")
+        #include_directories(PUBLIC "${OPENGL_INCLUDE_DIR}")
         target_link_libraries(galax_display PUBLIC ${OPENGL_LIBRARIES})
     endif(OPENGL_FOUND)
 
