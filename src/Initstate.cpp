@@ -1,4 +1,6 @@
 #include <fstream>
+#include <iostream>
+#include <numeric>
 
 #include "Initstate.hpp"
 
@@ -27,6 +29,7 @@ Initstate
 	}
 
 	size_t stride = max_n_particles / n_particles;
+    double mass = 0.0;
 	for (size_t i = 0; i < n_particles; i++)
     {
 		positionsx [i] = all_particles[i * stride][1];
@@ -36,5 +39,7 @@ Initstate
         velocitiesy[i] = all_particles[i * stride][5];
         velocitiesz[i] = all_particles[i * stride][6];
         masses     [i] = all_particles[i * stride][0];
+        mass += masses[i];
     }
+    std::cout << "Total mass : " << mass << std::endl;
 }

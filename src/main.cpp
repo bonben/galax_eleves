@@ -14,6 +14,7 @@
 #include "Model/Model_CPU/Model_CPU_naive/Model_CPU_naive.hpp"
 #include "Model/Model_CPU/Model_CPU_fast/Model_CPU_fast.hpp"
 #include "Model/Model_GPU/Model_GPU.hpp"
+#include "Model/Model_CPU/Model_CPU_fast/model_cpu_bh.hpp"
 
 int main(int argc, char ** argv)
 {
@@ -34,7 +35,7 @@ int main(int argc, char ** argv)
 	std::string  core         = "CPU";
 
 	// number of particles used by default : 2000
-	unsigned int n_particles  = 2000;
+    unsigned int n_particles  = 2000;
 
         // decide wether to check particle position against the reference or not
         bool validatePositions = false;
@@ -72,8 +73,11 @@ int main(int argc, char ** argv)
 	else if (display_type == "SDL2")
 		display = std::unique_ptr<Display>(new Display_SDL2(particles));
 #endif
-	else // TODO : add exception
+    else { // TODO : add exception
+        std::cout << "fail" << std::endl;
+        std::cout << display_type << std::endl;
 		exit(EXIT_FAILURE);
+    }
 
 	// init models
 	std::unique_ptr<Model> model, referenceModel;
@@ -82,7 +86,8 @@ int main(int argc, char ** argv)
 		referenceModel = std::make_unique<Model_CPU_naive>(initstate, particlesRef);
 
 	if (core == "CPU")
-		model = std::make_unique<Model_CPU_naive>(initstate, particles);
+            model = std::make_unique<Model_CPU_BH>(initstate,particles);
+            //model = std::make_unique<Model_CPU_naive>(initstate, particles);
 #ifdef GALAX_MODEL_CPU_FAST
 	else if (core == "CPU_FAST")
 		model = std::make_unique<Model_CPU_fast>(initstate, particles);
@@ -91,8 +96,11 @@ int main(int argc, char ** argv)
 	else if (core == "GPU")
 		model = std::make_unique<Model_GPU>(initstate, particles);
 #endif
-	else // TODO : add exception
+    else { // TODO : add exception
+        std::cout << "fail" << std::endl;
+        std::cout << core << std::endl;
 		exit(EXIT_FAILURE);
+    }
 
 	bool done = false;
 

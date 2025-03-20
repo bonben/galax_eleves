@@ -14,7 +14,7 @@ option(GALAX_LINK_CUDA "Link with the CUDA library (used for GPU model)"        
 option(GALAX_LINK_OMP  "Link with the OMP  library (used for CPU_FAST model)"    OFF)
 
 # Enable C++11
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Specify bin path
@@ -34,11 +34,17 @@ set(SRC_FILES_DISPLAY ${CMAKE_CURRENT_SOURCE_DIR}/src/Display/Display.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/src/Particles.cpp)
 
 set(SRC_FILES_MAIN    ${CMAKE_CURRENT_SOURCE_DIR}/src/Model/Model.cpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/src/Model/Model.hpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/src/Model/Model_CPU/Model_CPU.cpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/src/Model/Model_CPU/Model_CPU.hpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/src/Model/Model_CPU/Model_CPU_naive/Model_CPU_naive.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/src/Model/Model_CPU/Model_CPU_fast/Model_CPU_fast.cpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/src/Model/Model_CPU/Model_CPU_naive/Model_CPU_naive.hpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/src/Model/Model_CPU/Model_CPU_fast/Model_CPU_fast.hpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/src/Initstate.cpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/src/Initstate.hpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/src/Timing/Timing.cpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/src/Timing/Timing.hpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/config.hpp.in" "${CMAKE_CURRENT_BINARY_DIR}/src/config.hpp" @ONLY)
@@ -49,7 +55,10 @@ add_library (galax_display SHARED ${SRC_FILES_DISPLAY})
 if(GALAX_LINK_CUDA)
     add_library (galax_cuda SHARED ${SRC_FILES_CUDA})
 endif(GALAX_LINK_CUDA)
-add_executable(galax ${SRC_FILES_MAIN})
+add_executable(galax ${SRC_FILES_MAIN}
+    src/Model/Model_CPU/BHTree.hpp src/Model/Model_CPU/BHTree.cpp
+    src/Model/Body.hpp src/Model/Body.cpp
+    src/Model/Model_CPU/Model_CPU_fast/model_cpu_bh.hpp src/Model/Model_CPU/Model_CPU_fast/model_cpu_bh.cpp)
 
 # cli
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lib/cli/include/CLI/CLI.hpp")
@@ -110,6 +119,7 @@ if(GALAX_LINK_SDL2)
     find_package(OpenGL REQUIRED QUIET)
     if(OPENGL_FOUND)
         message(STATUS "Galax - Library found: OPENGL")
+        message(STATUS ${OPENGL_INCLUDE_DIR})
         include_directories(PUBLIC "${OPENGL_INCLUDE_DIR}")
         target_link_libraries(galax_display PUBLIC ${OPENGL_LIBRARIES})
     endif(OPENGL_FOUND)
