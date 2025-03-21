@@ -33,7 +33,10 @@ The objective of the course is to accelerate the simulation. You must maximize t
   * Steps fo final implementation
   * Summary of all results for each step
   * Critical analysis of the measures
-  * Demonstration
+* Demonstration
+  * No display, 10k particles
+  * Display, 10k particles
+  * Validate, 10k particles
 * Deliverables
   * Project code
 
