@@ -65,11 +65,7 @@ Model_GPU
 		velocitiesf4[i].x    = initstate.velocitiesx[i];
 		velocitiesf4[i].y    = initstate.velocitiesy[i];
 		velocitiesf4[i].z    = initstate.velocitiesz[i];
-		velocitiesf4[i].w    = 0;
-		accelerationsf4[i].x = 0;
-		accelerationsf4[i].y = 0;
-		accelerationsf4[i].z = 0;
-		accelerationsf4[i].w = 0;
+
 	}
 
 	cuda_malloc((void**)&positionsGPU,     n_particles * sizeof(float4));
