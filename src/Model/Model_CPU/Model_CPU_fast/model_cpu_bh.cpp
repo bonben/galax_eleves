@@ -27,9 +27,9 @@ Model_CPU_BH::Model_CPU_BH(const Initstate &initstate, Particles &particles) : M
     for(auto& v : bodies_per_thread)
         v.reserve(bodies.size());
 
-    for(int i = 0; i < 8; i++){
+    /*for(int i = 0; i < 8; i++){
         threads[i] = std::thread([this,i] () {thread_proc(i);});
-    }
+    }*/
 }
 
 void Model_CPU_BH::step()

@@ -60,6 +60,12 @@ add_executable(galax ${SRC_FILES_MAIN}
     src/Model/Body.hpp src/Model/Body.cpp
     src/Model/Model_CPU/Model_CPU_fast/model_cpu_bh.hpp src/Model/Model_CPU/Model_CPU_fast/model_cpu_bh.cpp)
 
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    target_compile_options(galax PRIVATE
+        -O2  # Add any flags here
+    )
+endif()
+
 # cli
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lib/cli/include/CLI/CLI.hpp")
     option(CLI_COMPILE_STATIC_LIB "" OFF)
