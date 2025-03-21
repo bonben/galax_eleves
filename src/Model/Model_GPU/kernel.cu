@@ -10,7 +10,7 @@ __global__ void compute_acc(float3 * positionsGPU, float3 * velocitiesGPU, float
 	// unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
 }
 
-__global__ void maj_pos(float3 * positionsGPU, float3 * velocitiesGPU, float3 * accelerationsGPU)
+__global__ void maj_pos(float3 * positionsGPU, float3 * velocitiesGPU, float3 * accelerationsGPU, int n_particles)
 {
 	// unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -22,7 +22,7 @@ void update_position_cu(float3* positionsGPU, float3* velocitiesGPU, float3* acc
 	int nblocks =  (n_particles + (nthreads -1)) / nthreads;
 
 	compute_acc<<<nblocks, nthreads>>>(positionsGPU, velocitiesGPU, accelerationsGPU, massesGPU, n_particles);
-	maj_pos    <<<nblocks, nthreads>>>(positionsGPU, velocitiesGPU, accelerationsGPU);
+	maj_pos    <<<nblocks, nthreads>>>(positionsGPU, velocitiesGPU, accelerationsGPU, n_particles);
 }
 
 
