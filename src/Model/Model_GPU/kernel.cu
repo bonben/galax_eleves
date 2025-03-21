@@ -8,34 +8,33 @@
 __global__ void compute_acc(float4 * positionsGPU, float4 * velocitiesGPU, float4 * accelerationsGPU, int n_particles)
 {
         unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
+        float3 acc = {0.0f, 0.0f, 0.0f};
         if (i >= n_particles ){
                 return;
         }
         for (int j = 0; j < n_particles; j++)
         {
 
-                        const float diffx = positionsGPU[j].x - positionsGPU[i].x;
-                        const float diffy = positionsGPU[j].y - positionsGPU[i].y;
-                        const float diffz = positionsGPU[j].z - positionsGPU[i].z;
+                const float diffx = positionsGPU[j].x - positionsGPU[i].x;
+                const float diffy = positionsGPU[j].y - positionsGPU[i].y;
+                const float diffz = positionsGPU[j].z - positionsGPU[i].z;
 
-                        float dij = diffx * diffx + diffy * diffy + diffz * diffz + EPS;
-                        dij = std::sqrt(dij);
-                        dij = 10.0 / (dij * dij * dij);
-                        
+                float dij = diffx * diffx + diffy * diffy + diffz * diffz ;
 
-                        accelerationsGPU[i].x += diffx * dij * positionsGPU[j].w;
-                        accelerationsGPU[i].y += diffy * dij * positionsGPU[j].w;
-                        accelerationsGPU[i].z += diffz * dij * positionsGPU[j].w;
+                dij = max(1.0f, dij);
+
+                dij = rsqrtf(dij);
+                dij = 10.0 * (dij * dij * dij);
+                
+
+                acc.x += diffx * dij * positionsGPU[j].w;
+                acc.y += diffy * dij * positionsGPU[j].w;
+                acc.z += diffz * dij * positionsGPU[j].w;
                 
         }
-
-
-
-
-//         int base = i*20+j*14 ;
-//         int end = base + 1<<14;
-//         if (n >= end ){
-//                 return;}
+        accelerationsGPU[i].x = acc.x;
+        accelerationsGPU[i].y = acc.y;  
+        accelerationsGPU[i].z = acc.z;
 }
 
 __global__ void maj_pos(float4 * positionsGPU, float4 * velocitiesGPU, float4 * accelerationsGPU, int n_particles)
