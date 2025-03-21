@@ -13,12 +13,12 @@ class Model_GPU : public Model
 private:
 
 	std::vector<float4> positionsf4    ;
-	std::vector<float3> velocitiesf3   ;
-	std::vector<float3> accelerationsf3;
+	std::vector<float4> velocitiesf4   ;
+	std::vector<float4> accelerationsf4;
 
 	float4* positionsGPU;
-	float3* velocitiesGPU;
-	float3* accelerationsGPU;
+	float4* velocitiesGPU;
+	float4* accelerationsGPU;
 	
 public:
 	Model_GPU(const Initstate& initstate, Particles& particles);

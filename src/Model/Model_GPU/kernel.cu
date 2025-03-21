@@ -5,7 +5,7 @@
 #define DIFF_T (0.1f)
 #define EPS (1.0f)
 
-__global__ void compute_acc(float4 * positionsGPU, float3 * velocitiesGPU, float3 * accelerationsGPU, int n_particles)
+__global__ void compute_acc(float4 * positionsGPU, float4 * velocitiesGPU, float4 * accelerationsGPU, int n_particles)
 {
         unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
         if (i >= n_particles ){
@@ -38,7 +38,7 @@ __global__ void compute_acc(float4 * positionsGPU, float3 * velocitiesGPU, float
 //                 return;}
 }
 
-__global__ void maj_pos(float4 * positionsGPU, float3 * velocitiesGPU, float3 * accelerationsGPU, int n_particles)
+__global__ void maj_pos(float4 * positionsGPU, float4 * velocitiesGPU, float4 * accelerationsGPU, int n_particles)
 {
         unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
         if (i >= n_particles ){
@@ -54,7 +54,7 @@ __global__ void maj_pos(float4 * positionsGPU, float3 * velocitiesGPU, float3 * 
 
 }
 
-void update_position_cu(float4* positionsGPU, float3* velocitiesGPU, float3* accelerationsGPU, int n_particles)
+void update_position_cu(float4* positionsGPU, float4* velocitiesGPU, float4* accelerationsGPU, int n_particles)
 {
         int nthreads = 256;
         int nblocks =  (n_particles + (nthreads -1)) / nthreads;
