@@ -9,7 +9,7 @@ Model_CPU_BH::Model_CPU_BH(const Initstate &initstate, Particles &particles) : M
     for(size_t i = 0; i < initstate.positionsx.size(); i++) {
         Body b;
         b.pos = {initstate.positionsx[i], initstate.positionsy[i], initstate.positionsz[i]};
-        b.spd = {initstate.velocitiesx[i], initstate.velocitiesy[i], initstate.velocitiesz[i]};
+        b.spd = {0.1f * initstate.velocitiesx[i], 0.1f * initstate.velocitiesy[i], 0.1f * initstate.velocitiesz[i]};
         b.mass = initstate.masses[i];
         bodies.push_back(b);
         if(std::abs(b.pos.x) > radius) {

@@ -6,7 +6,7 @@
 #include "../Body.hpp"
 #include <vector>
 
-constexpr double theta = 1.0;
+constexpr double theta = 0.8;
 
 enum Direction : int {
     UNW,
@@ -43,6 +43,7 @@ public:
 private:
     Region region;
     std::array<std::unique_ptr<BHTree>,8> children;
+    bool leaf;
     void add(Body b);
 };
 

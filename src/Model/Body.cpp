@@ -69,12 +69,12 @@ void Body::update_force(const Body &b)
 
     if (dij < 1.0)
     {
-        dij = 10.0;
+        dij = 2.0;
     }
     else
     {
         dij = std::sqrt(dij);
-        dij = 10.0 / (dij * dij * dij);
+        dij = 2.0 / (dij * dij * dij);
     }
 
     force.x += diffx * dij * b.mass * mass;
@@ -84,12 +84,12 @@ void Body::update_force(const Body &b)
 
 void Body::update_pos(double dt)
 {
-    spd.x += 2.0f * force.x / mass;
-    spd.y += 2.0f * force.y / mass;
-    spd.z += 2.0f * force.z / mass;
-    pos.x += 0.1f * spd.x;
-    pos.y += 0.1f * spd.y;
-    pos.z += 0.1f * spd.z;
+    spd.x += force.x / mass;
+    spd.y += force.y / mass;
+    spd.z += force.z / mass;
+    pos.x += spd.x;
+    pos.y += spd.y;
+    pos.z += spd.z;
 }
 
 void Body::operator+=(const Body &b)

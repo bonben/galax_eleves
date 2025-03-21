@@ -25,6 +25,7 @@ void Region::to_string() {
 
 BHTree::BHTree(Region region) : region(region) {
     mass_center.mass = 0;
+    leaf = true;
 }
 
 BHTree::BHTree(Region region, std::array<std::unique_ptr<BHTree>, 8>& c) : region(region) {
@@ -34,6 +35,7 @@ BHTree::BHTree(Region region, std::array<std::unique_ptr<BHTree>, 8>& c) : regio
         children[i] = std::move(c[i]);
         //children[i]->to_string();
     }
+    leaf = false;
 }
 
 void BHTree::insert(Body b) {
@@ -47,6 +49,7 @@ void BHTree::insert(Body b) {
         add(b);
     }
     else {
+        leaf = false;
         add(mass_center);
         add(b);
         mass_center += b;
@@ -65,11 +68,11 @@ void BHTree::add(Body b) {
 }
 
 bool BHTree::is_leaf() {
-    for(auto& c : children) {
+    /*for(auto& c : children) {
         if(c)
             return false;
-    }
-    return true;
+    }*/
+    return leaf;
 }
 
 int BHTree::height() {
