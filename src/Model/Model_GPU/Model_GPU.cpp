@@ -73,8 +73,8 @@ Model_GPU
 	}
 
 	cuda_malloc((void**)&positionsGPU,     n_particles * sizeof(float4));
-	cuda_malloc((void**)&velocitiesGPU,     n_particles * sizeof(float3));
-	cuda_malloc((void**)&accelerationsGPU,     n_particles * sizeof(float3));
+	cuda_malloc((void**)&velocitiesGPU,     n_particles * sizeof(float4));
+	cuda_malloc((void**)&accelerationsGPU,     n_particles * sizeof(float4));
 
 
 
