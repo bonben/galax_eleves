@@ -20,16 +20,17 @@ __global__ void compute_acc(float4 * positionsGPU, float4 * velocitiesGPU, float
                 const float diffz = positionsGPU[j].z - positionsGPU[i].z;
 
                 float dij = diffx * diffx + diffy * diffy + diffz * diffz ;
+                
 
                 dij = max(1.0f, dij);
 
                 dij = rsqrtf(dij);
                 dij = 10.0 * (dij * dij * dij);
-                
+                float temp = positionsGPU[j].w * dij;
 
-                acc.x += diffx * dij * positionsGPU[j].w;
-                acc.y += diffy * dij * positionsGPU[j].w;
-                acc.z += diffz * dij * positionsGPU[j].w;
+                acc.x += diffx * temp;
+                acc.y += diffy * temp;
+                acc.z += diffz * temp;
                 
         }
         accelerationsGPU[i].x = acc.x;
