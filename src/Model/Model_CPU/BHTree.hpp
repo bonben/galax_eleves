@@ -6,7 +6,7 @@
 #include "../Body.hpp"
 #include <vector>
 
-constexpr double theta = 0.8;
+constexpr double theta = 0.5;
 
 enum Direction : int {
     UNW,

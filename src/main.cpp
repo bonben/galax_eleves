@@ -38,7 +38,7 @@ int main(int argc, char ** argv)
 	unsigned int n_particles  = 2000;
 
         // decide wether to check particle position against the reference or not
-		bool validatePositions = false;
+		bool validatePositions = true;
 
 	// define CLI arguments
 	app.add_option("-c,--core"       , core       , "computing version")
