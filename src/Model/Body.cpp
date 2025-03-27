@@ -9,6 +9,7 @@ float Vector3::dist_sq(Vector3 const & v) const {
     /*__m128 diff = _mm_sub_ps(simd, v.simd);
     __m128 squared = _mm_mul_ps(diff, diff);
     return _mm_cvtss_f32(_mm_dp_ps(squared, squared, 0x71));*/
+
     return (v.x-x)*(v.x-x)+(v.y-y)*(v.y-y)+(v.z-z)*(v.z-z);
 }
 

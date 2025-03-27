@@ -66,6 +66,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
         -march=native
     )
 endif()
+add_compile_options(-msse4.1)
 
 # cli
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lib/cli/include/CLI/CLI.hpp")

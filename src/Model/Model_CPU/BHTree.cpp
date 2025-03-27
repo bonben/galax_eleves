@@ -47,8 +47,19 @@ void BHTree::insert(Body b) {
     }
     else {
         leaf = false;
+        float quarter_width = region.width/4;
+        float half_width = region.width/2;
+        float width_sqr = half_width*half_width;
         for(int i = 0;i != 8;++i)
-            children[i] = std::make_unique<BHTree>(region.get_sub(Direction(i)));
+        {
+            Region res;
+            res.center.z = region.center.z + quarter_width*stid(i >> 2);
+            res.center.y = region.center.y + quarter_width*stid((i >> 1) & 1);
+            res.center.x = region.center.x + quarter_width*stid(i & 1);
+            res.width = half_width;
+            res.width_sqr = width_sqr;
+            children[i] = std::make_unique<BHTree>(res);
+        }
         add(mass_center);
         add(b);
         mass_center += b;
@@ -61,10 +72,6 @@ void BHTree::add(Body b) {
 }
 
 bool BHTree::is_leaf() {
-    /*for(auto& c : children) {
-        if(c)
-            return false;
-    }*/
     return leaf;
 }
 
@@ -82,11 +89,8 @@ int BHTree::height() {
 }
 
 void BHTree::update_force(Body& b) {
-    if(mass_center.mass == 0){
-        return;
-    }
     if(is_leaf()) {
-        if(mass_center != b)
+        if(mass_center != b && mass_center.mass != 0)
             b.update_force(mass_center);
     }
     else {
@@ -94,9 +98,14 @@ void BHTree::update_force(Body& b) {
             b.update_force(mass_center);
         }
         else {
-            for(auto& c : children) {
-                c->update_force(b);
-            }
+            children[0]->update_force(b);
+            children[1]->update_force(b);
+            children[2]->update_force(b);
+            children[3]->update_force(b);
+            children[4]->update_force(b);
+            children[5]->update_force(b);
+            children[6]->update_force(b);
+            children[7]->update_force(b);
         }
     }
 }
