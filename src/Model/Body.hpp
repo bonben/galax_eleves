@@ -5,21 +5,24 @@ constexpr double G = 6.67e-11;
 
 struct Vector3
 {
-    double x;
-    double y;
-    double z;
+    float x;
+    float y;
+    float z;
 
     double dist_sq(Vector3 const& v) const;
 
     Vector3 med(Vector3 const& v);
 
+    Vector3 operator-(Vector3 const& v) const;
+
     Vector3 operator+(Vector3 const& v) const;
 
-    Vector3 operator*(double f) const;
+    Vector3 operator*(float f) const;
 
-    void operator/=(double f);
+    void operator/=(float f);
 
     bool operator==(Vector3 const& v) const;
+    float normSqr() const;
 };
 
 struct Body

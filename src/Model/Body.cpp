@@ -2,7 +2,10 @@
 #include <cmath>
 #include <iostream>
 
-double Vector3::dist_sq(Vector3 const & v) const {
+
+
+
+float Vector3::dist_sq(Vector3 const & v) const {
     return (v.x-x)*(v.x-x) + (v.y-y)*(v.y-y) + (v.z-z)*(v.z-z);
 }
 
@@ -15,16 +18,31 @@ Vector3 Vector3::med(const Vector3 &v)
     return res;
 }
 
-Vector3 Vector3::operator+(const Vector3& v) const
+Vector3 Vector3::operator-(const Vector3& v) const
 {
     Vector3 res;
-    res.x = x + v.x;
-    res.y = y + v.y;
-    res.z = z + v.z;
+    res.x = x - v.x;
+    res.y = y - v.y;
+    res.z = z - v.z;
     return res;
 }
 
-Vector3 Vector3::operator*(double f) const
+Vector3 Vector3::operator+(const Vector3& v) const
+{
+    Vector3 res;
+    res.simd = _mm_add_ps(simd, v.simd);
+    return res;
+}
+
+void Vector3::operator+=(const Vector3 &v)
+{
+    x += v.x;
+    y += v.y;
+    z += v.z;
+
+}
+
+Vector3 Vector3::operator*(float f) const
 {
     Vector3 res;
     res.x = f*x;
@@ -33,7 +51,7 @@ Vector3 Vector3::operator*(double f) const
     return res;
 }
 
-void Vector3::operator/=(double f)
+void Vector3::operator/=(float f)
 {
     x /= f;
     y /= f;
@@ -49,6 +67,11 @@ double Body::dist_sq(Body const & b) const {
     return pos.dist_sq(b.pos);
 }
 
+float Vector3::normSqr() const
+{
+    return x*x+y*y+z*z;
+}
+
 void Body::update_force(const Body &b)
 {
     /*double d = dist_sq(b);
@@ -61,11 +84,10 @@ void Body::update_force(const Body &b)
     force.x += F * (b.pos.x - pos.x) / d2;
     force.y += F * (b.pos.y - pos.y) / d2;
     force.z += F * (b.pos.z - pos.z) / d2;*/
-    const float diffx = -(pos.x - b.pos.x);
-    const float diffy = -(pos.y - b.pos.y);
-    const float diffz = -(pos.z - b.pos.z);
 
-    float dij = diffx * diffx + diffy * diffy + diffz * diffz;
+    const Vector3 diff = b.pos-pos;
+
+    float dij = diff.normSqr();
 
     if (dij < 1.0)
     {
@@ -77,9 +99,7 @@ void Body::update_force(const Body &b)
         dij = 2.0 / (dij * dij * dij);
     }
 
-    force.x += diffx * dij * b.mass * mass;
-    force.y += diffy * dij * b.mass * mass;
-    force.z += diffz * dij * b.mass * mass;
+    force += diff * (dij * b.mass * mass);
 }
 
 void Body::update_pos(double dt)
