@@ -126,7 +126,7 @@ void Model_CPU_BH::step()
 
     //exit(5);
     for(auto& b : bodies) {
-        b.force = {0.0,0.0,0.0};
+        b.acceleration = {0.0,0.0,0.0};
     }
 
     #pragma omp parallel for

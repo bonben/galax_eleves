@@ -33,7 +33,7 @@ struct Body
 {
     Vector3 pos;
     Vector3 spd;
-    Vector3 force;
+    Vector3 acceleration;
 
     double mass;
 

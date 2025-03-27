@@ -74,17 +74,6 @@ float Vector3::normSqr() const
 
 void Body::update_force(const Body &b)
 {
-    /*double d = dist_sq(b);
-    double d2 = std::sqrt(d);
-    if(d2 == 0) {
-        exit(520);
-    }
-    //d2 = 10.0 / (d2*d2*d2);
-    double F = mass * b.mass / d;
-    force.x += F * (b.pos.x - pos.x) / d2;
-    force.y += F * (b.pos.y - pos.y) / d2;
-    force.z += F * (b.pos.z - pos.z) / d2;*/
-
     const Vector3 diff = b.pos-pos;
 
     float dij = diff.normSqr();
@@ -99,17 +88,13 @@ void Body::update_force(const Body &b)
         dij = 2.0 / (dij * dij * dij);
     }
 
-    force += diff * (dij * b.mass * mass);
+    acceleration += diff * (dij * b.mass);
 }
 
 void Body::update_pos(double dt)
 {
-    spd.x += force.x / mass;
-    spd.y += force.y / mass;
-    spd.z += force.z / mass;
-    pos.x += spd.x;
-    pos.y += spd.y;
-    pos.z += spd.z;
+    spd += acceleration;
+    pos += spd;
 }
 
 void Body::operator+=(const Body &b)
@@ -117,7 +102,7 @@ void Body::operator+=(const Body &b)
     double mt = mass + b.mass;
     pos = pos*mass + b.pos*b.mass;
     spd = {0,0,0};//spd*mass + b.spd*b.mass;
-    force = {0,0,0};//acc*mass + b.acc*b.mass;
+    acceleration = {0,0,0};//acc*mass + b.acc*b.mass;
     pos /= mt;
     mass += b.mass;
 }
