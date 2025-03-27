@@ -36,7 +36,6 @@ void Model_CPU_BH::step()
  
     Region r;
     r.center = {0.0,0.0,0.0};
-    r.width = 2*radius;
     for(auto & v : bodies_per_thread)
         v.clear();
     for(auto& b : bodies) {

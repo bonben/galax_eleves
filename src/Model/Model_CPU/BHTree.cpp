@@ -33,7 +33,6 @@ BHTree::BHTree(Region region, std::array<std::unique_ptr<BHTree>, 8>& c) : regio
     for(int i = 0; i < c.size(); i++) {
         mass_center += c[i]->mass_center;
         children[i] = std::move(c[i]);
-        //children[i]->to_string();
     }
     leaf = false;
 }

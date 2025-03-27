@@ -41,7 +41,7 @@ struct Body
 
     void update_force(Body const& b);
 
-    void update_pos(double dt);
+    void update_pos();
 
     void operator+=(Body const& b);
 
