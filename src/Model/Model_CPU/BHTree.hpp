@@ -8,6 +8,8 @@
 
 constexpr double theta = 0.5;
 
+constexpr double theta_sqr = theta*theta;
+
 enum Direction : int {
     UNW,
     UNE,
@@ -23,6 +25,7 @@ struct Region
 {
     Vector3 center;
     double width;
+    double width_sqr;
     Region get_sub(Direction dir);
     void to_string();
 };

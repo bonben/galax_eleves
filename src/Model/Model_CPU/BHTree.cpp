@@ -13,9 +13,7 @@ Region Region::get_sub(Direction dir) {
     res.center.y = center.y + (width/4)*stid((dir >> 1) & 1);
     res.center.x = center.x + (width/4)*stid(dir & 1);
     res.width = width / 2.0;
-    if(res.width == 0) {
-        exit(125);
-    }
+    res.width_sqr = res.width*res.width;
     return res;
 }
 
@@ -49,6 +47,8 @@ void BHTree::insert(Body b) {
     }
     else {
         leaf = false;
+        for(int i = 0;i != 8;++i)
+            children[i] = std::make_unique<BHTree>(region.get_sub(Direction(i)));
         add(mass_center);
         add(b);
         mass_center += b;
@@ -57,13 +57,7 @@ void BHTree::insert(Body b) {
 
 void BHTree::add(Body b) {
     size_t dir = (b.pos.x > region.center.x) | ((b.pos.y > region.center.y) << 1) | ((b.pos.z > region.center.z) << 2);
-    if(!children[dir]) {
-        children[dir] = std::make_unique<BHTree>(region.get_sub(Direction(dir)));
-        children[dir]->insert(b);
-    }
-    else {
-        children[dir]->insert(b);
-    }
+    children[dir]->insert(b);
 }
 
 bool BHTree::is_leaf() {
@@ -88,20 +82,20 @@ int BHTree::height() {
 }
 
 void BHTree::update_force(Body& b) {
-    if(mass_center.mass == 0 || mass_center == b){
+    if(mass_center.mass == 0){
         return;
     }
     if(is_leaf()) {
-        b.update_force(mass_center);
+        if(mass_center != b)
+            b.update_force(mass_center);
     }
     else {
-        if(region.width / std::sqrt(mass_center.dist_sq(b)) < theta) {
+        if(region.width_sqr < theta_sqr*mass_center.dist_sq(b)) {
             b.update_force(mass_center);
         }
         else {
             for(auto& c : children) {
-                if(c)
-                    c->update_force(b);
+                c->update_force(b);
             }
         }
     }
@@ -114,10 +108,6 @@ void BHTree::to_string() {
 void BHTree::print_tree() {
     std::ofstream out("out_tree.txt");
     explore(out, 0);
-    /*std::cout << "Print tree" << std::endl;
-    for(auto& c : children) {
-        if(c) c->to_string();
-    }*/
 }
 
 void BHTree::explore(std::ofstream& out, int depth) {

@@ -6,7 +6,6 @@
 
 Model_CPU_BH::Model_CPU_BH(const Initstate &initstate, Particles &particles) : Model_CPU(initstate, particles)
 {
-    omp_set_num_threads(8);
     radius = 0;
     for(size_t i = 0; i < initstate.positionsx.size(); i++) {
         Body b;
@@ -52,6 +51,7 @@ void Model_CPU_BH::step()
         bodies_per_thread[dir].push_back(b);
     }
     r.width = 2*radius;
+    r.width_sqr = r.width*r.width;
 
     for(int i = 0; i < 8 ;i++){
         trees[i] = (std::make_unique<BHTree>(r.get_sub(Direction{i})));

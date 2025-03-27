@@ -72,23 +72,37 @@ float Vector3::normSqr() const
     //return _mm_cvtss_f32(_mm_dp_ps(simd, simd, 0x71));
 }
 
-void Body::update_force(const Body &b)
-{
-    const Vector3 diff = b.pos-pos;
+float invSqrt( float number ){
+    union {
+        float f;
+        int i;
+    } conv;
 
-    float dij = diff.normSqr();
+    float x2;
+    const float threehalfs = 1.5F;
 
-    if (dij < 1.0)
-    {
-        dij = 2.0;
-    }
-    else
-    {
-        dij = std::sqrt(dij);
-        dij = 2.0 / (dij * dij * dij);
-    }
+    x2 = number * 0.5F;
+    conv.f  = number;
+    conv.i  = 0x5f3759df - ( conv.i >> 1 );
+    conv.f  = conv.f * ( threehalfs - ( x2 * conv.f * conv.f ) );
+    return conv.f;
+}
 
-    acceleration += diff * (dij * b.mass);
+void Body::update_force(const Body& b) {
+    const Vector3 diff = b.pos - pos;
+
+    const float dij_sq = diff.normSqr();
+    //const float dij = invSqrt(dij_sq);
+
+    const float inv_factor = (dij_sq >= 1.0f)
+                                 ? (2.0f/ (dij_sq * _mm_cvtss_f32(_mm_sqrt_ss(_mm_set_ss(dij_sq)))))
+                                 : 2.0f;
+
+    // or ? (2.0f *dij*dij*dij)
+
+    const float factor = b.mass * inv_factor;
+
+    acceleration += diff * factor;
 }
 
 void Body::update_pos()
