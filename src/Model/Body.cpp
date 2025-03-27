@@ -86,7 +86,7 @@ void Body::update_force(const Body &b)
     acceleration += diff * (dij * b.mass);
 }
 
-void Body::update_pos(double dt)
+void Body::update_pos()
 {
     spd += acceleration;
     pos += spd;
