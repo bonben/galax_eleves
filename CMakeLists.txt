@@ -63,6 +63,7 @@ add_executable(galax ${SRC_FILES_MAIN}
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     target_compile_options(galax PRIVATE
         -O2  # Add any flags here
+        -march=native
     )
 endif()
 
