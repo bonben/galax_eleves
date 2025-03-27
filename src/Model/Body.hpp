@@ -1,21 +1,25 @@
 #ifndef BODY_HPP
 #define BODY_HPP
 
+#include <immintrin.h>
 constexpr double G = 6.67e-11;
 
-struct Vector3
+class Vector3
 {
-    float x;
-    float y;
-    float z;
+public:
+    union {
+        struct { float x, y, z, w; }; // w for padding/alignment
+        __m128 simd; // SIMD register type
+    };
 
-    double dist_sq(Vector3 const& v) const;
+    float dist_sq(Vector3 const& v) const;
 
     Vector3 med(Vector3 const& v);
 
     Vector3 operator-(Vector3 const& v) const;
 
     Vector3 operator+(Vector3 const& v) const;
+    void operator+=(Vector3 const& v);
 
     Vector3 operator*(float f) const;
 

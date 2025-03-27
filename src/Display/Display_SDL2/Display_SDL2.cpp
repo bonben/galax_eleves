@@ -1,6 +1,8 @@
+#include <cmath>
 #ifdef GALAX_DISPLAY_SDL2
 
 #include "Display_SDL2.hpp"
+#include <stdio.h>
 
 Display_SDL2
 ::Display_SDL2(Particles& particles)
