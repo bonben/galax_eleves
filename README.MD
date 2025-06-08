@@ -1,5 +1,7 @@
 # Galax : Simulate the collision of two galaxies
 
+![Galax](galax.png)
+
 ## Description
 
 Galax is the simple implementation of the [n-body problem](https://en.wikipedia.org/wiki/N-body_problem), applied to the simulation of celestial objects. The equations that describe the problem between are listed in [equations.pdf](equations.pdf).
